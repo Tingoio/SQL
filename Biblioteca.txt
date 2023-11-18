@@ -1,0 +1,193 @@
+CREATE DATABASE Biblioteca;
+USE Biblioteca;
+-- Exercicio 2
+CREATE TABLE Membro (
+ Cod_membro INT PRIMARY KEY AUTO_INCREMENT,
+ Rua VARCHAR(100) NOT NULL,
+ Numero_casa VARCHAR(10) NOT NULL,
+ Nome_membro VARCHAR(100) NOT NULL,
+ Telefone VARCHAR(30) NOT NULL
+);
+CREATE TABLE Autor (
+ Cod_autor INT PRIMARY KEY AUTO_INCREMENT,
+ Nome_autor VARCHAR(100) NOT NULL,
+ Nacionalidade VARCHAR(50) NOT NULL,
+ Data_nascimento DATE NOT NULL,
+ Obras VARCHAR(100) NOT NULL
+);
+CREATE TABLE Categoria (
+ Cod_cat INT PRIMARY KEY AUTO_INCREMENT,
+ Desc_cat VARCHAR(50) NOT NULL
+);
+CREATE TABLE Livro(
+ Cod_livro INT PRIMARY KEY AUTO_INCREMENT,
+ Cod_autor INT NOT NULL,
+ Cod_cat INT NOT NULL,
+ Titulo VARCHAR(100) NOT NULL,
+ Autor VARCHAR(100) NOT NULL,
+ Ano_pub DECIMAL (4, 0) NOT NULL,
+ Numero_ex TINYINT NOT NULL,
+ FOREIGN KEY (Cod_autor)
+ REFERENCES Autor (Cod_autor),
+ FOREIGN KEY (Cod_cat)
+ REFERENCES Categoria (Cod_cat)
+);
+CREATE TABLE Emprestimo (
+ Cod_emp INT PRIMARY KEY AUTO_INCREMENT,
+ Cod_livro INT NOT NULL,
+ Cod_membro INT NOT NULL,
+ Data_emp DATETIME NOT NULL,
+ Data_dev_prev DATETIME NOT NULL,
+ Data_dev_real DATETIME NOT NULL,
+ FOREIGN KEY (Cod_livro)
+ REFERENCES Livro (Cod_livro),
+ FOREIGN KEY (Cod_membro)
+ REFERENCES Membro (Cod_membro)
+);
+-- Exercicio 3
+INSERT INTO Membro
+(Rua, Numero_casa, Nome_membro, Telefone)
+VALUES
+('Rua Antonio Pinto', '438', 'José dos Santos ', '(41)4002-8922'),
+('Avenida Marcelo de Palmas', '122', 'Janete Cerqueira Silva', '(41)99876-6564'),
+('Rua Souza Freitas', '99', 'Marcelo Borba', '(41)99800-7676'),
+('Rua Benedito Soares Lima', '22', 'Eduardo Almeida de Lima', '(41)99775-7574'),
+('Rua dos Bobos', '0', 'Vinicius Wayne Zatti', '(41)9887-7221');
+INSERT INTO Autor
+(Nome_autor, Nacionalidade, Data_nascimento, Obras)
+VALUES
+('Antonio Ahsoka', 'Russo', '1968-06-08', 'A roseira de porcelana chinesaA molécula'),
+('Amilton Sebastião', 'Brasileiro', '1977-05-22', 'Clube da lutaO cavaleiro das trevas'),
+('Douglas Luiz Santos', 'inglês', '2000-09-30', 'A revolução dos bichosO coringa'),
+('Eduardo Ramos', 'Alemão', '1988-07-08', 'A mente de budaO sistema da vida'),
+('Fabio Andrade de Lima', 'Árabe', '1944-09-07', 'A definição de sistemaO poder da mente humana');
+INSERT INTO Categoria
+(Desc_cat)
+VALUES
+('Drama'),
+('Romance'),
+('Ação'),
+('Ficção'),
+('Terror');
+INSERT INTO Livro
+(Cod_autor, Cod_cat, Titulo, Autor, Ano_pub, Numero_ex)
+VALUES
+('1', '1', 'A roseira de porcelana chinesa', 'Antonio Ahsoka', '1988', '17'),
+('2', '2', 'O sistema da vida', 'Amilton Sebastião', '1978', '3'),
+('3', '3', 'Clube da luta', 'Douglas Luiz Santos', '1978', '80'),
+('4', '3', 'A mente de buda', 'Eduardo Ramos', '1998', '1'),
+('5', '5', 'A definição de sistema', 'Fabio Andrade de Lima', '1974', '26');
+INSERT INTO Emprestimo
+(Cod_livro, Cod_membro, Data_emp, Data_dev_prev, Data_dev_real)
+VALUES
+('1','1', '2012-08-01 115901', '2012-08-11 120809', '2012-08-09 083613'),
+('2','3', '2010-05-10 123159', '2010-05-20 144829', '2010-05-15 093916'),
+('3','3', '2016-07-13 235956', '2016-07-23 185241', '2012-07-20 204214'),
+('4','4', '2020-09-09 215552', '2020-09-19 124502', '2020-09-15 225609'),
+('4','5', '2022-10-10 094322', '2022-10-20 235632', '2022-10-08 105523');
+-- Exercicio 4
+SELECT 
+FROM Autor
+WHERE Nome_autor
+LIKE 'A%';
+-- Exercicio 5
+SELECT 
+FROM Livro
+WHERE Titulo
+LIKE '%sistema%';
+-- Exercicio 6
+SELECT Cod_livro, Titulo
+FROM Livro
+WHERE Ano_pub  2018;
+-- Exercicio 7
+SELECT 
+FROM Livro
+WHERE Numero_ex  5
+ORDER BY Titulo;
+-- Exercicio 8
+SELECT 
+FROM Livro WHERE Cod_livro NOT IN
+ (SELECT Cod_livro
+ FROM Emprestimo);
+-- Exercicio 9
+UPDATE Emprestimo
+SET Data_dev_real = NOW();
+-- Exercicio 10
+UPDATE Emprestimo
+SET Data_dev_prev = ADDDATE(Data_dev_prev, INTERVAL 1 MONTH);
+-- Exercicio 11
+DELETE FROM Membro
+WHERE Cod_membro NOT IN
+ (SELECT Cod_membro
+ FROM emprestimo);
+-- Exercicio 12
+DELETE FROM Categoria
+WHERE Cod_cat NOT IN
+ (SELECT Cod_cat
+ FROM Livro);
+ 
+ -- AV3
+ 
+ USE Biblioteca;
+-- Exercicio 1
+SELECT L.Titulo, A.Nome_autor
+FROM Livro L
+INNER JOIN Autor A
+ ON L.Cod_autor = A.Cod_autor;
+-- Exercicio 2
+SELECT E.Data_emp, M.Nome_membro, L.Titulo
+FROM Livro L
+INNER JOIN Emprestimo E
+ ON L.Cod_livro = E.Cod_livro
+INNER JOIN Membro M
+ ON E.Cod_membro = M.Cod_membro
+WHERE YEAR(E.Data_emp) = YEAR(CURDATE());
+-- Exercicio 3
+SELECT C.Desc_cat, L.Titulo
+FROM Livro L
+INNER JOIN Categoria C
+ ON L.Cod_cat = C.Cod_cat;
+-- Exercicio 4
+SELECT L.Titulo, E.Data_emp, E.Data_dev_real
+FROM Livro L
+INNER JOIN Emprestimo E
+ ON L.Cod_livro = E.Cod_livro;
+-- Exercicio 5
+SELECT E.Data_emp, E.Data_dev_real, M.Nome_membro, L.Titulo, C.Desc_cat, A.Nome_autor
+FROM Emprestimo E
+INNER JOIN Membro M
+ ON E.Cod_membro = M.Cod_membro
+INNER JOIN Livro L
+ ON L.Cod_livro = E.Cod_livro
+INNER JOIN Categoria C
+ ON C.Cod_cat = L.Cod_cat
+INNER JOIN Autor A
+ ON L.Cod_autor = A.Cod_autor;
+
+-- Exercicio 6
+SELECT COUNT() QuantidadeDeLivros
+FROM Livro;
+-- Exercicio 7
+SELECT COUNT() EmprestimosAnoPassado
+FROM Emprestimo
+WHERE YEAR(Data_emp) = 2022;
+-- Exercicio 8
+SELECT Desc_cat, COUNT() LivroPorCat
+FROM Categoria
+GROUP BY Desc_cat;
+-- Exercicio 9
+SELECT L.Titulo, M.Nome_membro, E.Data_emp
+FROM Livro L
+INNER JOIN Emprestimo E
+ ON L.Cod_livro = E.Cod_livro
+INNER JOIN Membro M
+ ON M.Cod_membro = E.Cod_membro
+WHERE WEEK (E.Data_emp) = WEEK(CURDATE())
+GROUP BY Data_emp, Nome_membro, Titulo
+ORDER BY Data_emp;
+-- Exercicio 10
+SELECT MONTHNAME(Data_emp) Meses, COUNT() Quantidade
+FROM Emprestimo E
+WHERE YEAR(E.Data_emp) = YEAR(CURDATE())
+GROUP BY E.Data_emp
+ORDER BY MONTH(E.Data_emp);

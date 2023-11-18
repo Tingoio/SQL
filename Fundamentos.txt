@@ -1,0 +1,16 @@
+1-Banco de dados é um conjunto de fato (dados) que formam informações que se transformar em conhecimento, um sistema de gerenciamento de dados funcional é essencial para uma gestão eficiente
+
+2-Dado é um fato sem relação nenhuma com algum objeto ou situação específica, informação é o dado em um contexto específico, conhecimento é a informação com alguma função
+
+3-O sistema de arquivos normalmente é feito manualmente e é mais complexo de ser organizado do que um SGBD(Sistema Gerenciador de Banco de Dados)
+
+4-Usuários e administradores de banco de dados
+
+5-A google utiliza um banco de dados NoSQL(Não Relacional) pois ele traz um sistema mais robusto que possibilita uma escalabilidade maior de fluxo de dados.
+
+6-	8229393921	Carlos	23	Curitiba -- PR
+	23332445665	Luana	14	Natal - RN
+	45665656566	Felipe	45	Londrina - PR
+	12483992993	Joao	23	New York - EUA
+	19885764663	Marcelo	53	Fortaleza - CE
+	12332444444	Gabriel	28	Brasília - DF
